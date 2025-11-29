@@ -1,1 +1,117 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Polygon Thingy</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      
+const dt = 0.02;
+const g = 39.5;
+const soft = 0.15;
+
+let balls = [
+  {x:100, y:100, vx: 0, vy: -0.4, ax: 0, ay: 0, m: 1},
+  //{x: 300, y: 300, vx: 0, vy: 0, ax: 0, ay: 0, m: 20},
+  {x:540, y:510, vx: 0, vy: -0.1, ax: 0, ay: 0, m: 3}
+];
+
+function updatePosition() {
+  for(let i = 0; i < balls.length; i++) {
+    balls[i].x += balls[i].vx * dt;
+    balls[i].y += balls[i].vy * dt;
+  }
+}
+
+function updateVelocity() {
+  for(let i = 0; i < balls.length; i++) {
+    balls[i].vx += balls[i].ax * dt;
+    balls[i].vy += balls[i].ay * dt;
+  }
+}
+
+function updateAcceleration() {
+  // calculate forces
+  for (var i = 0; i < balls.length; i++) {
+    
+    var ax = 0
+    var ay = 0
+    
+    var a = balls[i];
+    
+    for (var j = 0; j < balls.length; j++) {
+      
+      if (i != j) {
+         var b = balls[j];
+         
+         let dx = b.x - a.x;
+         let dy = b.y - a.y;
+        
+         if (dx == 0) dx = 0.00001
+         if (dy == 0) dy = 0.00001
+         
+         let distSq = dx * dx + dy * dy;
+         //let f = (g * b.m) / (distSq * Math.sqrt(distSq + soft))
+         
+         let f = (g * b.m) / (distSq)
+         
+         ax += dx * f;
+         ay += dy * f;
+      }
+      
+    }
+    
+    balls[i].ax = ax
+    balls[i].ay = ay
+    
+  }
+}
+
+
+function addBall() {
+  balls.push({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: Math.random() * 0.1, vy: Math.random() * 0.1,
+    ax: 0, ay: 0,
+    m: Math.random()
+  }); 
+}
+
+
+function setup() {
+  createCanvas(600, 600);
+  colorMode(HSB, 360, 100, 100);
+  
+  for (let i = 0; i < 100; i++) {
+    addBall()
+  }
+}
+
+function draw() {
+  
+  background(200)
+  
+  updatePosition();
+  updateAcceleration();
+  updateVelocity();
+  
+  // draw the balls
+  for(var o = 0; o < balls.length; o++) {
+    var p = balls[o]
+    fill(0, 0, 100 - p.m * 3);
+    circle(p.x, p.y, 10 * p.m)
+  }
+}
+    </script>
+  </body>
+</html>
