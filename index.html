@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Polygon Thingy</title>
+    <title>Bemby Bemby Time</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <style>
       body {
@@ -18,6 +18,12 @@
 const dt = 0.02;
 const g = 39.5;
 const soft = 0.15;
+
+let img;
+
+function preload() {
+  img = loadImage("https://raw.githubusercontent.com/gingerlaser/bembybembytime/0ba118a39da26d372f6c757cfd2be2a8a4eb3678/bembyface.png");
+}
 
 let balls = [
   {x:100, y:100, vx: 0, vy: -0.4, ax: 0, ay: 0, m: 1},
@@ -106,11 +112,13 @@ function draw() {
   updateVelocity();
   
   // draw the balls
-  for(var o = 0; o < balls.length; o++) {
-    var p = balls[o]
-    fill(0, 0, 100 - p.m * 3);
-    circle(p.x, p.y, 10 * p.m)
-  }
+imageMode(CENTER);
+
+for (var o = 0; o < balls.length; o++) {
+  var p = balls[o];
+  let size = 10 * p.m;
+  image(img, p.x, p.y, size, size * (img.height / img.width));
+}
 }
     </script>
   </body>
